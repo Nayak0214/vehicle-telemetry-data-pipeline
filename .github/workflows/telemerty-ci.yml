@@ -1,0 +1,22 @@
+
+name: Telemetry Validation CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  containerized-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build repeatable test image
+        run: docker build -f Dockerfile.ci -t telemetry-ci:test .
+
+      - name: Run telemetry validation tests
+        run: docker run --rm telemetry-ci:test
